@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.study.groupware.mapper.EmailMapper">
+
+	<insert id="create">
+		INSERT INTO eml_tb(
+		eml_sq,
+		eml_nm,
+		eml_cnt,
+		eml_pl_nm,
+		eml_pl_crs
+		)
+		VALUES(SEQ_EML.NEXTVAL,#{eml_nm},#{eml_cnt},#{eml_pl_nm},#{eml_pl_crs})
+
+	</insert>
+
+	<insert id="create2">
+		<!-- <selectKey resultType="int" keyProperty="eml_sq" order="BEFORE"> SELECT 
+			SEQ_EML.CURRVAL FROM DUAL </selectKey> -->
+
+		INSERT INTO eml_rcv_tb(
+		rcv_eml_sq,
+		stf_snd_sq,
+		eml_sq,
+		ipt_sq,
+		rcv_dt
+		)
+		VALUES(SEQ_RCV_EML.NEXTVAL,#{stf_snd_sq},
+		(SELECT eml_sq from eml_tb
+		where eml_sq = (SELECT MAX(eml_sq)AS eml_sq FROM eml_tb)),1,SYSDATE)
+	</insert>
+
+	<insert id="create3">
+
+		INSERT INTO eml_snd_tb(
+		snd_eml_sq,
+		stf_rcv_sq,
+		eml_sq,
+		snd_dt
+		)
+		VALUES(SEQ_SND_EML.NEXTVAL,#{stf_rcv_sq},
+		(SELECT eml_sq from
+		eml_tb where eml_sq = (SELECT MAX(eml_sq)AS eml_sq FROM
+		eml_tb)),SYSDATE)
+	</insert>
+
+	<select id="read" parameterType="Map" resultType="EmailVO">
+		SELECT
+		eml_sq,
+		eml_pl_nm,
+		eml_pl_crs,
+		eml_nm,
+		stf_nm,
+		eml_cnt,
+		to_char(rcv_dt,'YYYY-MM-DD
+		HH24:MI:SS') as rcv_dt
+		FROM
+		EML_RCV_VW
+		WHERE eml_sq = #{eml_sq}
+	</select>
+
+	<update id="update" parameterType="Map">
+		UPDATE eml_rcv_tb SET
+		ipt_sq =
+		2
+		WHERE eml_sq = #{eml_sq}
+	</update>
+
+	<delete id="delete" parameterType="Map">
+		DELETE FROM EML_RCV_TB
+		WHERE
+		eml_sq = #{eml_sq}
+
+	</delete>
+	<select id="sndCount" resultType="int">
+		SELECT COUNT(*)AS CNT
+		FROM
+		EML_SND_VW
+		WHERE stf_snd_sq=#{stf_snd_sq}
+
+	</select>
+	<select id="rcvCount" resultType="int">
+		SELECT COUNT(*)AS CNT
+		FROM
+		EML_RCV_VW
+		WHERE ipt_sq=1
+		and stf_rcv_sq=#{stf_rcv_sq}
+
+	</select>
+	<select id="keepCount" resultType="int">
+		SELECT COUNT(*)AS CNT
+		FROM
+		EML_RCV_VW
+		WHERE ipt_sq=2
+		and stf_rcv_sq=#{stf_rcv_sq}
+
+	</select>
+	
+	<select id="rcvSearchCount" resultType="int">
+		SELECT COUNT(*)AS CNT
+		FROM EML_RCV_VW
+		WHERE ipt_sq=1
+		and stf_rcv_sq=#{stf_rcv_sq}
+		<choose>
+			<when test="cate == 1">
+				AND stf_nm LIKE '%' || #{keyword} || '%'
+			</when>
+			<when test="cate == 2">
+				AND eml_nm LIKE '%' || #{keyword} || '%'
+			</when>
+			<otherwise>
+
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="sndSearchCount" resultType="int">
+		SELECT COUNT(*)AS CNT
+		FROM EML_SND_VW
+		where stf_snd_sq=#{stf_snd_sq}
+		<choose>
+			<when test="cate == 1">
+				AND stf_nm LIKE '%' || #{keyword} || '%'
+			</when>
+			<when test="cate == 2">
+				AND eml_nm LIKE '%' || #{keyword} || '%'
+			</when>
+			<otherwise>
+
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="keepSearchCount" resultType="int">
+		SELECT COUNT(*)AS CNT
+		FROM EML_RCV_VW
+		WHERE ipt_sq=2
+		and stf_rcv_sq=#{stf_rcv_sq}
+		<choose>
+			<when test="cate == 1">
+				AND stf_nm LIKE '%' || #{keyword} || '%'
+			</when>
+			<when test="cate == 2">
+				AND eml_nm LIKE '%' || #{keyword} || '%'
+			</when>
+			<otherwise>
+
+			</otherwise>
+		</choose>
+	</select>
+	<select id="sndListAll" resultType="com.study.groupware.vo.EmailVO">
+
+
+		SELECT B.*
+		FROM
+		(SELECT ROWNUM AS RNUM ,A.*
+		FROM(SELECT
+		*
+		FROM
+		EML_SND_VW
+		WHERE stf_snd_sq=#{stf_snd_sq}
+		<choose>
+			<when test="cate == 1">
+				AND stf_nm LIKE '%' || #{keyword} || '%'
+			</when>
+			<when test="cate == 2">
+				AND eml_nm LIKE '%' || #{keyword} || '%'
+			</when>
+			<otherwise>
+
+			</otherwise>
+		</choose>
+		ORDER BY snd_eml_sq DESC)A
+         <![CDATA[
+    WHERE ROWNUM<=#{endCount})B
+WHERE B.RNUM>=#{startCount}
+         ORDER BY RNUM ASC
+
+  
+ ]]>
+	</select>
+
+	<select id="rcvListAll" resultType="com.study.groupware.vo.EmailVO">
+		SELECT B.*
+		FROM
+		(SELECT ROWNUM AS RNUM ,A.*
+		FROM(SELECT
+		*
+		FROM
+		EML_RCV_VW
+		WHERE ipt_sq=1 AND stf_rcv_sq=#{stf_rcv_sq}
+
+		<choose>
+			<when test="cate == 1">
+				AND stf_nm LIKE #{keyword} || '%'
+			</when>
+			<when test="cate == 2">
+				AND eml_nm LIKE #{keyword} || '%'
+			</when>
+			<otherwise>
+
+			</otherwise>
+		</choose>
+
+		ORDER BY rcv_eml_sq DESC)A
+         <![CDATA[
+    WHERE ROWNUM<=#{endCount})B
+WHERE B.RNUM>=#{startCount}
+         ORDER BY RNUM ASC
+ ]]>
+	</select>
+
+	<select id="keepListAll" resultType="com.study.groupware.vo.EmailVO">
+
+		SELECT B.*
+		FROM
+		(SELECT ROWNUM AS RNUM ,A.*
+		FROM(SELECT
+		*
+		FROM
+		EML_RCV_VW
+		where ipt_sq=2 AND stf_rcv_sq=#{stf_rcv_sq}
+		<choose>
+			<when test="cate == 1">
+				AND stf_nm LIKE #{keyword} || '%'
+			</when>
+			<when test="cate == 2">
+				AND eml_nm LIKE #{keyword} || '%'
+			</when>
+			<otherwise>
+
+			</otherwise>
+		</choose>
+		ORDER BY rcv_eml_sq DESC)A
+         <![CDATA[
+    WHERE ROWNUM<=#{endCount})B
+WHERE B.RNUM>=#{startCount}
+         ORDER BY RNUM DESC
+ ]]>
+	</select>
+
+
+</mapper>

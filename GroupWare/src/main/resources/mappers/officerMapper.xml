@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.study.groupware.officerMapper">
+
+	<select id="officerList" parameterType="Map" resultType="Map">
+		SELECT B.RNUM,
+		       B.STF_SQ,
+		       B.STF_PT_RT, 
+		       B.STF_NM, 
+		       B.RNK_NM, 
+		       B.DPT_NM, 
+		       B.ADMN_PW, 
+		       B.STF_PH, 
+		       B.STF_BS_PH, 
+		       B.STF_EML
+		FROM (
+		    SELECT ROWNUM AS RNUM,
+		           A.STF_SQ,
+		           A.STF_PT_RT, 
+		           A.STF_NM, 
+		           A.RNK_NM, 
+		           A.DPT_NM, 
+		           A.ADMN_PW, 
+		           A.STF_PH, 
+		           A.STF_BS_PH, 
+		           A.STF_EML
+		    FROM (
+		        SELECT  STF.STF_SQ,
+		                STF.STF_PT_RT, 
+		                STF.STF_NM, 
+		                RNK.RNK_SQ,
+		                RNK.RNK_NM,
+		                DD.DPT_NM, 
+		                ADMN.ADMN_PW, 
+		                STF.STF_PH, 
+		                STF.STF_BS_PH, 
+		                STF.STF_EML
+		        FROM STF_TB STF, ADMN_TB ADMN, RNK_TB RNK, DPT_DIV_TB DD
+		        WHERE ADMN.ADMN_SQ = STF.ADMN_SQ
+		        AND RNK.RNK_SQ = STF.RNK_SQ
+		        AND DD.DPT_SQ = STF.DPT_SQ
+				AND STF.STF_NM = #{navStfNm}
+		        ORDER BY DPT_NM DESC, RNK_SQ ASC, STF_NM ASC
+		<![CDATA[
+			    )A
+			    WHERE ROWNUM <= #{endCount}
+			)B
+			WHERE B.RNUM >= #{startCount}
+			ORDER BY RNUM DESC
+		]]>
+				
+				
+	</select>
+
+	<select id="officerListCount" parameterType="Map" resultType="int">
+		SELECT COUNT(*) AS CNT
+		FROM STF_TB STF, ADMN_TB ADMN, RNK_TB RNK, DPT_DIV_TB DD
+		WHERE ADMN.ADMN_SQ = STF.ADMN_SQ
+		AND RNK.RNK_SQ = STF.RNK_SQ
+		AND DD.DPT_SQ = STF.DPT_SQ
+		AND STF.STF_NM = #{navStfNm}
+	</select>
+	
+	<select id="selectOrganization" parameterType="Map" resultType="Map">
+		SELECT  STF.STF_NM, 
+				RNK.RNK_NM, 
+				DD.DPT_NM
+		FROM STF_TB STF, ADMN_TB ADMN, RNK_TB RNK, DPT_DIV_TB DD
+		WHERE ADMN.ADMN_SQ = STF.ADMN_SQ
+		AND RNK.RNK_SQ = STF.RNK_SQ
+		AND DD.DPT_SQ = STF.DPT_SQ
+	</select>
+
+</mapper>

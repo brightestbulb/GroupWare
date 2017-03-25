@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.study.groupware.TestMapper">
+
+	<select id="list" parameterType="Map" resultType="Map">
+		WITH T AS(
+		SELECT '2015' cyear, 'kim' name, '25000' salary FROM DUAL UNION
+		ALL
+		SELECT '2014' cyear, 'kim' name, '23000' salary FROM DUAL UNION ALL
+		SELECT '2014' cyear, 'lee' name, '35000' salary FROM DUAL UNION ALL
+		SELECT '2015' cyear, 'choi' name, '32000' salary FROM DUAL
+		)
+		SELECT *
+		FROM T
+	</select>
+
+
+</mapper>

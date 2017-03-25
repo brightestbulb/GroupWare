@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.study.groupware.adminMapper">
+
+	<select id="officerList" parameterType="Map" resultType="Map">
+		
+			SELECT B.RNUM,
+			       B.STF_SQ,
+			       B.STF_PT_RT, 
+			       B.STF_NM, 
+			       B.RNK_NM, 
+			       B.DPT_NM, 
+			       B.ADMN_PW, 
+			       B.STF_PH, 
+			       B.STF_BS_PH, 
+			       B.STF_EML
+			FROM (
+			    SELECT ROWNUM AS RNUM,
+			           A.STF_SQ,
+			           A.STF_PT_RT, 
+			           A.STF_NM, 
+			           A.RNK_NM, 
+			           A.DPT_NM, 
+			           A.ADMN_PW, 
+			           A.STF_PH, 
+			           A.STF_BS_PH, 
+			           A.STF_EML
+			    FROM (
+			        SELECT  STF.STF_SQ,
+			                STF.STF_PT_RT, 
+			                STF.STF_NM, 
+			                RNK.RNK_SQ,
+			                RNK.RNK_NM,
+			                DD.DPT_NM, 
+			                ADMN.ADMN_PW, 
+			                STF.STF_PH, 
+			                STF.STF_BS_PH, 
+			                STF.STF_EML
+			        FROM STF_TB STF, ADMN_TB ADMN, RNK_TB RNK, DPT_DIV_TB DD
+			        WHERE ADMN.ADMN_SQ = STF.ADMN_SQ
+			        AND RNK.RNK_SQ = STF.RNK_SQ
+			        AND DD.DPT_SQ = STF.DPT_SQ
+			        
+			        <choose>
+						<when test="cate == 1">
+							AND STF.STF_NM LIKE #{keyword} || '%'
+						</when>
+						<when test="cate == 2">
+							AND RNK.RNK_NM LIKE #{keyword} || '%'
+						</when>
+						<when test="cate == 3">
+							AND DD.DPT_NM LIKE #{keyword} || '%'
+						</when>
+						<otherwise>
+			
+						</otherwise>
+					</choose>
+			        
+			        ORDER BY DPT_NM DESC, RNK_SQ ASC, STF_NM ASC
+		<![CDATA[
+			    )A
+			    WHERE ROWNUM <= #{endCount}
+			)B
+			WHERE B.RNUM >= #{startCount}
+			ORDER BY RNUM DESC
+		]]>
+	</select>
+
+	<select id="officerListCount" parameterType="Map" resultType="int">
+		SELECT COUNT(*) AS CNT
+		FROM STF_TB STF, ADMN_TB ADMN, RNK_TB RNK, DPT_DIV_TB DD
+		WHERE ADMN.ADMN_SQ = STF.ADMN_SQ
+		AND RNK.RNK_SQ = STF.RNK_SQ
+		AND DD.DPT_SQ = STF.DPT_SQ
+		
+		<choose>
+			<when test="cate == 1">
+				AND STF.STF_NM LIKE #{keyword} || '%'
+			</when>
+			<when test="cate == 2">
+				AND RNK.RNK_NM LIKE #{keyword} || '%'
+			</when>
+			<when test="cate == 3">
+				AND DD.DPT_NM LIKE #{keyword} || '%'
+			</when>
+			<otherwise>
+
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="selectStf_tb" resultType="Map">
+		SELECT STF.STF_NM, 
+			   RNK.RNK_NM, 
+			   DD.DPT_NM
+		FROM STF_TB STF, ADMN_TB ADMN, RNK_TB RNK, DPT_DIV_TB DD
+        WHERE ADMN.ADMN_SQ = STF.ADMN_SQ
+        AND RNK.RNK_SQ = STF.RNK_SQ
+        AND DD.DPT_SQ = STF.DPT_SQ
+	</select>
+	
+	<select id="selectAdmn_Tb" parameterType="Map" resultType="Map">
+		SELECT ADMN_SQ, ADMN_PW
+		FROM ADMN_TB
+		ORDER BY ADMN_SQ
+	</select>
+	
+	<select id="selectRnk_Tb" parameterType="Map" resultType="Map">
+		SELECT RNK_SQ, RNK_NM
+		FROM RNK_TB
+		ORDER BY RNK_SQ
+	</select>
+	
+	<select id="selectDpt_Div_Tb" parameterType="Map" resultType="Map">
+		SELECT DPT_SQ, DPT_NM
+		FROM DPT_DIV_TB
+		ORDER BY DPT_SQ
+	</select>
+	
+	<select id="selectStf_Sq" parameterType="Map" resultType="int">
+		SELECT COUNT(*) AS CNT
+		FROM STF_TB
+		WHERE STF_SQ = #{stf_sq}
+	</select>
+	
+	<insert id="officerInsert" parameterType="OfficerVO">
+		INSERT INTO STF_TB 
+		VALUES (#{stf_sq}, 
+				#{admn_sq}, 
+				#{dpt_sq}, 
+				#{rnk_sq}, 
+				#{stf_nm}, 
+				CRYPTPACK.ENCRYPT(#{stf_pw}, 'admin'), 
+				#{stf_ph},
+				#{stf_cm_add}, 
+				#{stf_dt_add}, 
+				#{stf_bs_ph}, 
+				#{stf_eml}, 
+				#{stf_ent}, 
+				SYSDATE, 
+				SYSDATE, 
+				#{stf_pt_rt}, 
+				#{stf_pt_nm})
+	</insert>
+	
+	<select id="selectUpdateOfficer" parameterType="Map" resultType="Map">
+		SELECT  STF_SQ,
+				ADMN_SQ,
+				DPT_SQ,
+				RNK_SQ,
+				STF_NM,
+				STF_PH,
+				STF_CM_ADD,
+				STF_DT_ADD,
+				STF_BS_PH,
+				STF_EML,
+				STF_ENT,
+				STF_PT_RT,
+				STF_PT_NM
+		FROM STF_TB
+		WHERE STF_SQ = #{stf_sq}
+	</select>
+	
+	<update id="officerUpdate" parameterType="OfficerVO">
+		UPDATE STF_TB
+		SET STF_NM = #{stf_nm}, 
+			ADMN_SQ = #{admn_sq}, 
+			DPT_SQ = #{dpt_sq}, 
+			RNK_SQ = #{rnk_sq}, 
+			STF_CM_ADD = #{stf_cm_add}, 
+			STF_DT_ADD = #{stf_dt_add}, 
+			STF_EML = #{stf_eml}, 
+			STF_PH = #{stf_ph}, 
+			STF_BS_PH = #{stf_bs_ph}, 
+			STF_ENT = #{stf_ent}, 
+			STF_MOD = SYSDATE
+			<if test="stf_sq != ''">
+				,STF_SQ = #{stf_sq}
+			</if>
+			<if test="stf_pw != ''">
+				,STF_PW = CRYPTPACK.ENCRYPT(#{stf_pw}, 'admin')
+			</if>
+			<if test="stf_pt_rt != null">
+				,STF_PT_RT = #{stf_pt_rt}
+			</if>
+			<if test="stf_pt_nm != null">
+				,STF_PT_NM = #{stf_pt_nm}
+			</if>
+		WHERE STF_SQ = #{stf_sq_old}
+	</update>
+	
+	<insert id="deptInsert" parameterType="Map">
+		INSERT INTO DPT_DIV_TB VALUES(SEQ_DPT.NEXTVAL, #{dpt_nm})
+	</insert>
+	
+	<select id="selectDeptNm" parameterType="Map" resultType="int">
+		SELECT COUNT(*) AS CNT
+		FROM DPT_DIV_TB
+		WHERE DPT_NM = #{dpt_nm}
+	</select>
+	
+	<update id="deptUpdate" parameterType="Map">
+		UPDATE DPT_DIV_TB
+		SET DPT_NM = #{dpt_nm}
+		WHERE DPT_SQ = #{dpt_sq}
+	</update>
+	
+	
+	<delete id="deptDelete" parameterType="Map">
+		DELETE 
+		FROM DPT_DIV_TB
+		WHERE DPT_SQ = #{dpt_sq}
+	</delete>
+
+</mapper>

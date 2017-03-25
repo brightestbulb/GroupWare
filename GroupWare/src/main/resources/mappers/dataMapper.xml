@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.study.groupware.mapper.DataMapper">
+
+	<insert id="create">
+		INSERT INTO DATA_TB (
+		data_sq,
+		stf_sq,
+		data_nm,
+		data_cnt,
+		data_hits,
+		data_dt,
+		data_mod,
+		data_crs,
+		data_pl_nm)
+		VALUES(SEQ_DATA.NEXTVAL,#{stf_sq},#{data_nm},#{data_cnt},0,SYSDATE,SYSDATE,#{data_crs},#{data_pl_nm})
+	</insert>
+
+	<select id="read" resultType="DataVO">
+		SELECT
+		data_sq,
+		data_nm,
+		stf_nm,
+		to_char(data_dt,'YYYY-MM-DD
+		HH24:MI:SS') as data_dt,
+		data_pl_nm,
+		data_crs,
+		data_cnt
+		FROM
+		DATA_VW
+		WHERE data_sq
+		=#{data_sq}
+	</select>
+
+	<update id="update">
+		UPDATE data_tb SET
+		data_nm =#{data_nm},
+		data_cnt=#{data_cnt}
+		WHERE data_sq = #{data_sq}
+	</update>
+
+	<delete id="delete">
+		DELETE FROM DATA_TB
+		WHERE DATA_SQ = #{DATA_SQ}
+	</delete>
+
+
+	<select id="count" resultType="int">
+		SELECT COUNT(*)AS CNT
+		FROM DATA_VW
+
+	</select>
+
+
+	<select id="searchCount" parameterType="DataVO" resultType="int">
+		SELECT COUNT(*)AS SCNT
+		FROM DATA_VW
+		WHERE data_sq>0
+		<choose>
+			<when test="cate == 1">
+				AND stf_nm LIKE #{keyword} || '%'
+			</when>
+			<when test="cate == 2">
+				AND ntc_nm LIKE #{keyword} || '%'
+			</when>
+			<otherwise>
+
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<select id="listAll" parameterType="com.study.groupware.vo.DataVO"
+		resultType="com.study.groupware.vo.DataVO">
+
+
+		SELECT B.*
+		FROM
+		(SELECT ROWNUM AS RNUM ,A.*
+		FROM(SELECT
+		*
+		FROM
+		DATA_VW
+
+		<choose>
+			<when test="cate == 1">
+				WHERE stf_nm LIKE #{keyword} || '%'
+			</when>
+			<when test="cate == 2">
+				WHERE data_nm LIKE #{keyword} || '%'
+			</when>
+			<otherwise>
+
+			</otherwise>
+		</choose>
+		ORDER BY data_sq ASC)A
+          <![CDATA[
+    WHERE ROWNUM<=#{endCount})B
+WHERE B.RNUM>=#{startCount}
+ORDER BY RNUM DESC
+ ]]>
+	</select>
+
+	<update id="updateViewCnt">
+		UPDATE DATA_TB SET DATA_HITS = DATA_HITS +1
+		WHERE
+		DATA_SQ = #{DATA_SQ}
+	</update>
+
+
+</mapper>

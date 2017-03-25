@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.study.groupware.mapper.NtcReplyMapper">
+
+	<insert id="create" parameterType="Map">
+		INSERT INTO RPY_TB (
+		rpy_sq,
+		ntc_sq,
+		stf_sq,
+		rpy_cnt,
+		rpy_dt,
+		rpy_mod
+		)
+		VALUES(SEQ_RPY.NEXTVAL,#{ntc_sq},#{stf_sq},#{rpy_cnt},SYSDATE,SYSDATE)
+	</insert>
+
+	<select id="read" parameterType="Map" resultType="NtcReplyVO">
+		SELECT
+		rpy_sq,
+		stf_nm,
+		rpy_cnt,
+		rpy_mod
+		FROM
+		NTC_RPY_VW
+		WHERE rpy_sq = #{rpy_sq}
+	</select>
+
+	<update id="update" parameterType="Map" >
+		UPDATE RPY_TB SET
+		rpy_cnt=#{rpy_cnt},
+		rpy_mod = SYSDATE
+		WHERE rpy_sq = #{rpy_sq}
+	</update>
+
+	<delete id="delete" parameterType="Map">
+		DELETE FROM RPY_TB
+		WHERE rpy_sq
+		= #{rpy_sq}
+	</delete>
+
+
+
+	<select id="listAll" resultType="com.study.groupware.vo.NtcReplyVO">
+ 		<![CDATA[
+
+   SELECT
+    *
+   FROM
+   NTC_RPY_VW
+   WHERE ntc_sq =#{ntc_sq}
+
+  
+ ]]>
+	</select>
+
+
+</mapper>

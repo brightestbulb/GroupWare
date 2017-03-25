@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.study.groupware.navMapper">
+
+	<select id="myInfo" parameterType="String" resultType="Map">
+		SELECT  STF.STF_SQ,
+				DD.DPT_NM,
+				RNK.RNK_NM,
+				STF.STF_NM,
+				STF.STF_PH,
+				STF.STF_CM_ADD,
+				STF.STF_DT_ADD,
+				STF.STF_BS_PH,
+				STF.STF_EML,
+				STF.STF_ENT,
+				STF.STF_PT_RT
+		FROM STF_TB STF, DPT_DIV_TB DD, RNK_TB RNK
+		WHERE STF.DPT_SQ = DD.DPT_SQ
+		AND STF.RNK_SQ = RNK.RNK_SQ
+		AND STF.STF_SQ = #{stf_sq}
+	</select>
+	
+	
+	<update id="stfPwUpdate" parameterType="Map">
+		UPDATE STF_TB
+		SET STF_PW = CRYPTPACK.ENCRYPT(#{stf_pw}, 'admin')
+		WHERE STF_SQ = #{stf_sq}
+	</update>
+	
+</mapper>

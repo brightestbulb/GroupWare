@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.study.groupware.mapper.ScheduleMapper">
+
+	<select id="selectSchedule" parameterType="Map" resultType="ScheduleVO">
+		SELECT bs_scd_sq, 
+		       scd_nm,
+		       dpt_sq,
+		       stf_nm,
+		       bs_scd_nm,
+		       bs_scd_cnt,
+		       bs_scd_str_dt,
+		       bs_scd_end_dt
+		FROM SCD_VW
+		WHERE scd_sq = #{scd_sq}
+		<choose>
+			<when test="scd_sq == 2">
+				AND DPT_SQ = #{dpt_sq}
+			</when>
+			<when test="scd_sq == 3">
+				AND STF_SQ = #{stf_sq}
+			</when>
+			<otherwise>
+				AND 1=1
+			</otherwise>
+		</choose>
+		
+		AND (SUBSTR(TO_CHAR(bs_scd_str_dt, 'YYYY-MM-DD HH24:MI:SS'), 0, 7) = #{param}
+		OR SUBSTR(TO_CHAR(bs_scd_end_dt, 'YYYY-MM-DD HH24:MI:SS'), 0, 7) = #{param})
+		ORDER BY bs_scd_str_dt ASC, bs_scd_end_dt ASC
+	</select>
+	
+	<insert id="insertSchedule" parameterType="ScheduleVO">
+		INSERT INTO BS_SCD_TB 
+		VALUES(SEQ_BS_SCD.NEXTVAL, #{scd_sq}, #{stf_sq}, #{bs_scd_nm}, #{bs_scd_cnt}, TO_DATE(#{bs_scd_str_dt}, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#{bs_scd_end_dt}, 'YYYY-MM-DD HH24:MI:SS'))
+	</insert>
+	
+	<select id="readSchedule" parameterType="Map" resultType="ScheduleVO">
+		SELECT BS_SCD_SQ, 
+		       SCD_NM,
+		       DPT_SQ,
+		       STF_SQ,
+		       STF_NM,
+		       BS_SCD_NM,
+		       BS_SCD_CNT,
+		       BS_SCD_STR_DT,
+		       BS_SCD_END_DT
+		FROM SCD_VW
+		WHERE BS_SCD_SQ = #{param}
+	</select>
+	
+	<select id="updateSchedule" parameterType="Map">
+		UPDATE BS_SCD_TB
+		SET BS_SCD_NM = #{bs_scd_nm},
+			BS_SCD_CNT = #{bs_scd_cnt},
+			BS_SCD_STR_DT = TO_DATE(#{bs_scd_str_dt}, 'YYYY-MM-DD HH24:MI:SS'),
+			BS_SCD_END_DT = TO_DATE(#{bs_scd_end_dt}, 'YYYY-MM-DD HH24:MI:SS')
+		WHERE BS_SCD_SQ = #{bs_scd_sq}
+	</select>
+	
+	<select id="deleteSchedule" parameterType="Map">
+		DELETE
+		FROM BS_SCD_TB
+		WHERE BS_SCD_SQ = #{param}
+	</select>
+	
+</mapper>
