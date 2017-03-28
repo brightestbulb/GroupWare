@@ -10,4 +10,4 @@
   - Technology : JDBC, HTML 5.0, CSS, Javascript, jQuery, 
   - Tool : Eclipse (MARS1), eXERD, sqldevelopr
   - api : 다음 주소검색, 네이버 스마트에디터, jQuery EasyUI1.5.1, Viewr JS  
-	- Tistory : http://brightestbulb.tistory.com/
+  - Tistory : http://brightestbulb.tistory.com/
