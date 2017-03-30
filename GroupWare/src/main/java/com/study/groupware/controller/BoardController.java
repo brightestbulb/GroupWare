@@ -106,6 +106,7 @@ public class BoardController {
 		if (request.getParameter("msg") != null) {
 			msg = (String)request.getParameter("msg");
 		}
+		System.out.println("======================================================msg : " + msg);
 		model.addAttribute("msg", msg);
 		
 		
@@ -171,17 +172,13 @@ public class BoardController {
 
 
 	@RequestMapping(value = "/read", method = RequestMethod.GET)
-	public void read(@RequestParam("ntc_sq") String ntc_sq ,HttpServletRequest request, HttpSession session,Model model)
+	public void read(@RequestParam("ntc_sq") String ntc_sq , Model model)
 			throws Exception {
 
 		logger.info("-------------start read [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
-		session = request.getSession(false);
-		String stf_sq = null;
-		stf_sq = (String)session.getAttribute("stf_sq");
 		model.addAttribute(service.read(ntc_sq));
 		model.addAttribute("list", service1.listReply(ntc_sq));            //게시판 댓글 리스트 가져오기
-        model.addAttribute("stf_sq", stf_sq);                              //로그인 한 사람 사번 보내서 리플 작성자 사번과 비교
-			
+		
 		logger.info("---------------end read [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
 	}
 

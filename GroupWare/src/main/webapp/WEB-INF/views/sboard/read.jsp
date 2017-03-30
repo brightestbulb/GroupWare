@@ -42,7 +42,6 @@
 
 <script>
 	$(document).ready(function() {
-	
 
 		var formObj = $("form[role='form']"); //formObj는 위에 선언된 form 태그를 의미
 		//여러 작업을하려면 현재의 조회페이지에서 수정할 수 있는 화면으로 이동해야 하기 때문에
@@ -325,15 +324,10 @@
 										<br></br>
 										<div id="${NtcReplyVO.rpy_sq}">${NtcReplyVO.rpy_cnt}
 								
-								<c:set var="stf_sq" value="${stf_sq}"/>
-								<c:set var="wt_stf_sq" value="${NtcReplyVO.stf_sq}"/>
-								  <c:if test ="${stf_sq eq wt_stf_sq}">
-								  <div class="rplyb"> 
+									<div class="rplyb"> 
 										<button  class="replyModBtn" data-value="${NtcReplyVO.rpy_sq}">수정</button>
 										<button  class="replyDelBtn" data-value="${NtcReplyVO.rpy_sq}">삭제</button>
 									</div>
-								  </c:if> 
-									
 								 </div>
 								</td>
 							</tr>

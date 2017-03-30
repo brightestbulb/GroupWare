@@ -133,7 +133,8 @@
 						</colgroup>
 						<thead>
 						</thead>
-						<form role="form">
+						<form id="officerUpdateForm" action="/admin/myInfoUpdate"
+							method="post" enctype="multipart/form-data">
 							<tbody>
 								<tr>
 									<th class="text-center"><img id="imgView_myInfo" class="profileImg"
@@ -248,8 +249,8 @@
 									<td><input type="date" id="stf_ent_myInfo"
 										class="form-control" readonly="readonly" value="${myInfoList.STF_ENT }"></td>
 								</tr>
-					</tbody>
-					</form>
+							</tbody>
+						</form>
 					</table>
 				</div>
 				<div class="modal-footer">

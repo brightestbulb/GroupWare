@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,14 +33,12 @@ public class NavController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/stfPwUpdate", method = { RequestMethod.GET, RequestMethod.POST})
-	public int stfPwUpdate(HttpServletRequest request,HttpSession session, @RequestBody Map<String, Object> params, Model model) throws Exception {
+	public int stfPwUpdate(HttpServletRequest request, @RequestBody Map<String, Object> params, Model model) throws Exception {
 
 		logger.info("-------------start stfPwUpdate [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
 
-		session = request.getSession(false);
-		String stf_sq = null;
-		stf_sq = (String)session.getAttribute("stf_sq");
-		
+		// 세션으로 대체
+		String stf_sq = "S000000002";
 		params.put("stf_sq", stf_sq);
 						
 		int result = 0;

@@ -9,7 +9,7 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
-<title>그룹웨어 로그인</title>
+<title>Insert title here</title>
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script
@@ -24,7 +24,7 @@ body, #wrap {
 #loginImg {
 	background-image: url(/resources/img/main.jpg);
 	position: absolute;
- 	width: 1930px; 
+ 	width: 2000px; 
 	height: 700px;
 	top: 50%;
 	margin-top: -250px;

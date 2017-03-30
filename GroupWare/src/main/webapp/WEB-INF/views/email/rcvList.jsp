@@ -158,12 +158,12 @@ form {
 			    data : JSON.stringify(params),
 			    contentType: "application/json; charset=UTF-8",
 			    beforeSend : function() {
-			    	 $("#eml_pl_nm1").empty(); 
+			    	$("#eml_pl_nm1").empty();
 			    	$("#eml_nm1").empty();
 			    	$("#eml_cnt1").empty();
 			    	$("#stf_nm1").empty();
 			    	$("#rcv_dt1").empty();
-			    /* 	$("#eml_pl_crs1 > a").empty(); *////
+			    	$("#eml_pl_crs1 > a").empty();///
 			    	
 			    	
 			    },
@@ -176,13 +176,12 @@ form {
 			    	var rcv_dt = data.rcv_dt;
 			    	var eml_pl_crs = data.eml_pl_crs;
 			    	
-			     	 /* $("#eml_pl_nm1").text(eml_pl_nm); */
+			    	$("#eml_pl_nm1").text(eml_pl_nm);
 			    	$("#eml_nm1").text(eml_nm);
 			 	    $("#eml_cnt1").text(eml_cnt);
 			    	$("#stf_nm1").text(stf_nm);
 			    	$("#rcv_dt1").text(rcv_dt);
-			    	/* $("#eml_pl_nm1").text(eml_pl_crs); */
-			    	$("#eml_pl_nm1").html('<a href='+eml_pl_crs+'>'+ eml_pl_nm +'</a>');
+			    	$("#eml_pl_crs1 > a").text(eml_pl_crs);///
 			    
 			    },
 			    error: function(request, status, error) {
@@ -369,7 +368,7 @@ form {
 					</div>
 					<div id="rightBottom">
 						<form role="form">
-							<input id='div1' type='hidden' value="${emailVO.eml_sq}">
+							<input id='div1' type='text' value="${emailVO.eml_sq}">
 						</form>
 
 						<div class="table-responsive">
@@ -420,7 +419,7 @@ form {
 						<h4 class="modal-title">편지조회</h4>
 					</div>
 					<div class="modal-body">
-					<form role="form" id="readFrm" method="post" >
+					<form role="form" id="readFrm" method="post" action="/email/emailRemove" >
 						<table class="table table-striped table-bordered">
 							<colgroup>
 								<col width="30%" />
@@ -428,6 +427,10 @@ form {
 							</colgroup>
 
 							<tbody>
+								<tr>
+									<th>파일이름</th>
+									<td id="eml_pl_nm1">${emailVO.eml_pl_nm}</td>
+								</tr>
 								<tr>
 									<th>제목</th>
 									<td id="eml_nm1">${emailVO.eml_nm}</td>
@@ -446,10 +449,10 @@ form {
 								<tr>
 									<th>받은시간</th>
 									<td id="rcv_dt1">${emailVO.rcv_dt}</td>
-	
+								</tr>
 								<tr>
 									<th>첨부파일</th>
-									<td id="eml_pl_nm1"></td>
+									<td id="eml_pl_crs1"><a href="#">${emailVO.eml_pl_crs}</a></td>
 								</tr>
 
 							</tbody>
@@ -458,6 +461,7 @@ form {
 					</div>
 					<div class="modal-footer">
 					    <button type="button" class="btn btn-success" data-dismiss="modal">확인</button>
+					<!-- 	<button type="button" id="readRemove" class="btn btn-warning" data-dismiss="modal">삭제</button> -->
 						<button type="button" class="btn btn-danger" data-dismiss="modal">취소</button>
 					</div>
 				</div>
