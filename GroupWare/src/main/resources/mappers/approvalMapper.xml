@@ -27,7 +27,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		mid_nm,
 		apv_ok,
 		div_apv_nm,
-		stf_admn_sq
+		stf_admn_sq,
+		apv_pl_rt
 		from
 		apv_vw
 		where apv_sq

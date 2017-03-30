@@ -254,7 +254,7 @@
 								</tr>
 								<tr>
 									<td width="100px">${dataVO.stf_nm}</td>
-									<td colspan="4" align="right">${dataVO.data_pl_nm}&nbsp;&nbsp;<a href="#">${dataVO.data_crs}</a></td>
+									<td colspan="4" align="right"><a href="${dataVO.data_crs}"download>${dataVO.data_pl_nm}</a></td>
 								</tr>
 								<tr>
 									<td colspan="4" height="350px">${dataVO.data_cnt}</td>
@@ -314,12 +314,16 @@
 								<fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${DataReplyVO.dt_rpy_mod}" /></span>
 									<br></br>
 									<div id="${DataReplyVO.dt_rpy_sq}">${DataReplyVO.dt_rpy_cnt}
+									<c:set var="stf_sq" value="${stf_sq}"/>
+								<c:set var="wt_stf_sq" value="${DataReplyVO.stf_sq}"/>
+								  <c:if test ="${stf_sq eq wt_stf_sq}">
 									<div id="rplyb">
 										<button class="replyModBtn" 
 											data-value="${DataReplyVO.dt_rpy_sq}">수정</button>
 										<button class="replyModBtn" 
 											data-value="${DataReplyVO.dt_rpy_sq}">삭제</button>
 								    </div>
+								    </c:if>
 								    </div>
 								</td>
 							</tr>

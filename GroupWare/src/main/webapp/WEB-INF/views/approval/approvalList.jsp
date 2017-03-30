@@ -20,10 +20,10 @@
 	width: 55%;
 	margin: auto; /* 화면 중앙에 배치*/
 }
+
 #searchBox {
 	margin-bottom: 10px;
 }
-
 </style>
 
 <script type="text/javascript">
@@ -78,10 +78,10 @@
 							console.log(stf_nm);
 							var mid_nm = data.mid_nm;
 							console.log(mid_nm);
-							
 							var stf_admn_sq = data.stf_admn_sq;
 							console.log(stf_admn_sq);
-						
+							var apv_pl_rt = data.apv_pl_rt;
+							console.log(apv_pl_rt);
 
 							$("#apv_pl_nm1").text(apv_pl_nm);
 							$("#apv_nm1").text(apv_nm);
@@ -89,13 +89,17 @@
 							$("#stf_nm").text(stf_nm);
 							$("#mid_nm").text(mid_nm);
 							$("#apv_ok").text(apv_ok);
-							
-							if(stf_admn_sq=='1'){
-							$("#apv_ok_sq1").hide();
-							    }
-							else if(stf_admn_sq=='2'){
-							$("#mid_admn").remove();
-								}
+					  	    $("#apv_pl_rt1").html('<iframe style="float: right;" src = "/resources/ViewerJS/#../file/'+ apv_pl_rt + '" width="530" height="300" allowfullscreen webkitallowfullscreen></iframe>')
+
+							if (stf_admn_sq == '1') {
+								$("#apv_ok_sq1").hide();
+							} else if (stf_admn_sq == '2') {
+								$("#fnl_admn").remove();
+							}
+							 else if(stf_admn_sq == '4'){
+								 console.log(stf_admn_sq);
+								$("#mid_admn").remove();
+							}
 
 						},
 						error : function(request, status, error) {
@@ -265,7 +269,7 @@
 
 					<div class="modal-body">
 
-						<form role="form" id="frm" method="post"
+						<form role="form" id="frm" method="post" enctype="multipart/form-data"
 							action="/approval/register">
 							<table class="table table-striped table-bordered">
 
@@ -296,29 +300,15 @@
 										<td><input type="text" id="stf_mid_sq" name="stf_mid_sq"
 											class="form-control" placeholder="중간승인자 사원번호입력"></td>
 									</tr>
-									<!-- <tr>
-										<th>최종승인자(*)</th>
-										<td><input type="text" id="stf_fnl_sq" name="stf_fnl_sq"
-											class="form-control" placeholder="최종승인자 사원번호입력"></td>
-									</tr> -->
-									<!-- <tr>
-										<th>결재승인(*)</th>
-										<td><select id="apv_ok_sq" class="form-control"
-											name="apv_ok_sq">
-												<option value="1">거절</option>
-												<option value="2">승인</option>
-												<option value="3">제출</option>
-										</select></td>
-									</tr> -->
-									<tr>
+								<!-- 	<tr>
 										<th>결재파일 이름</th>
-										<td><input type="text"
-											id="apv_pl_nm" name="apv_pl_nm" class="form-control"></td>
-									</tr>
+										<td><input type="text" id="apv_pl_nm" name="apv_pl_nm"
+											class="form-control"></td>
+									</tr>  -->
 									<tr>
 										<th>결재파일 업로드</th>
-										<td><input type="file"
-											id="apv_pl_rt" name="apv_pl_rt" class="form-control"></td>
+										<td><input type="file" id="apv_pl_rt" name="file"
+											class="form-control"></td>
 									</tr>
 								</tbody>
 
@@ -438,10 +428,10 @@
 							</colgroup>
 
 							<tbody>
-								<tr>
+						<%-- 		<tr>
 									<th>파일이름</th>
 									<td id="apv_pl_nm1">${approvalVO.apv_pl_nm}</td>
-								</tr>
+								</tr> --%>
 								<tr>
 									<th>제목</th>
 									<td id="apv_nm1">${approvalVO.apv_nm}</td>
@@ -463,16 +453,19 @@
 									<td id="apv_ok">${approvalVO.apv_ok}</td>
 								</tr>
 							</tbody>
+							
 						</table>
-
+					<div id ="apv_pl_rt1">
+						</div>
+						
 					</div>
 					<div class="modal-footer">
 						<select id="apv_ok_sq1" class="form-control" name="apv_ok_sq1"
 							data-value="apv_ok_sq1">
 							<option value="">선택</option>
 							<option value="1">거절</option>
-							<option value="2">승인(중간)</option>
-							<option id="mid_admn" value="4">승인(최종)</option>
+							<option id="mid_admn" value="2">승인(중간)</option>
+							<option id="fnl_admn" value="4">승인(최종)</option>
 						</select>
 
 						<button type="button" id="apv_sq_md" class="btn btn-primary"

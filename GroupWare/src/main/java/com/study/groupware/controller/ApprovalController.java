@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -21,9 +22,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.study.groupware.service.ApprovalService;
+import com.study.groupware.util.FileUpload;
 import com.study.groupware.util.Paging;
 import com.study.groupware.vo.ApprovalVO;
 import com.study.groupware.vo.BoardVO;
@@ -37,6 +40,9 @@ public class ApprovalController {
 
 	@Inject
 	private ApprovalService service;
+	
+	@Resource(name = "uploadPath2")
+	private String uploadPath2;
 
 	@RequestMapping(value = "/approvalList", method = RequestMethod.GET)
 	public String listAll(@RequestParam int div_apv_sq,HttpSession session,HttpServletRequest request, Model model) throws Exception {
@@ -221,11 +227,27 @@ public class ApprovalController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public String registPOST(ApprovalVO approval, RedirectAttributes rttr,HttpSession session,HttpServletRequest request) throws Exception {
+	public String registPOST(ApprovalVO approval, RedirectAttributes rttr,MultipartFile file,HttpSession session,HttpServletRequest request) throws Exception {
 		logger.info("-------------start registPOST [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
 
 		logger.info("regist post ...........");
+		logger.info("originalName : " + file.getOriginalFilename());	// 파일명.확장자
+		logger.info("size : " + file.getSize());						// 파일 용량(byte)
+		logger.info("contentType : " + file.getContentType());
 		logger.info(approval.toString());
+		
+		try{
+			FileUpload fileupload = new FileUpload();
+
+			System.out.println(approval.toString());
+
+			String savedName = fileupload.uploadfile(file.getOriginalFilename(), file.getBytes(), uploadPath2);
+
+			System.out.println(savedName+"==================================");
+
+			approval.setApv_pl_rt(savedName);
+			approval.setApv_pl_nm(file.getOriginalFilename());
+		
 		session = request.getSession(false);
 		String stf_sq = null;
 		stf_sq = (String)session.getAttribute("stf_sq");
@@ -233,8 +255,14 @@ public class ApprovalController {
 		service.regist(approval);
 
 		rttr.addFlashAttribute("msg", "SUCCESS");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 
 		logger.info("---------------end registPOST [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
 		return "redirect:/approval/approvalList?div_apv_sq=1";
 	}
+	
+
+		
 }
