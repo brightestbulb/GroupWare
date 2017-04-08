@@ -32,7 +32,7 @@ public class OfficerController {
 
 	@Inject
 	private OfficerService service;
-	
+
 	@Inject
 	private AdminService adminService;
 
@@ -42,7 +42,7 @@ public class OfficerController {
 		logger.info("-------------start index [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
 
 		Map<String, Object> result = new HashMap<String, Object>();
-		
+
 		try {
 
 
@@ -52,13 +52,13 @@ public class OfficerController {
 
 		logger.info("---------------end index [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
 	}
-	
-	
+
+
 	@RequestMapping(value = "/organization", method = { RequestMethod.GET, RequestMethod.POST})
 	public String organization(HttpServletRequest request,HttpSession session, @RequestParam Map<String, Object> params, Model model) throws Exception {
 
 		logger.info("-------------start organization [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
-		
+
 		/*** 로그인 ***/
 		// 세션이 있는지 확인한다, 만약 없다면 새로 생성하지 않는다.
 		session = request.getSession(false);
@@ -73,121 +73,121 @@ public class OfficerController {
 		if (stf_sq == null || stf_sq.equals(""))
 			return "redirect:/login/loginForm";
 		/*** 로그인 ***/
-		
+
 		List officerList = new ArrayList<HashMap<String, Object>>();
 		int officerListCount = 0;
 		List selectDpt_Div_Tb = new ArrayList<HashMap<String, Object>>();
-		
+
 		List selectOrganization = new ArrayList<HashMap<String, Object>>();
-		
+
 		try {
-			
+
 			officerListCount = service.officerListCount(params);
 			selectDpt_Div_Tb = adminService.selectDpt_Div_Tb();            //조직도 부서명 리스트 뽑기
 			selectOrganization = service.selectOrganization();             // 부서,직금,이름 뽑아오기
-			
+
 			// 페이징 처리 ========================================================================================================
 			Paging paging = new Paging();
-			
+
 			// 총 게시물 수 
 			int totalCnt = officerListCount;
-			
+
 			// 현재 페이지 초기화
 			int current_page = 1;
-			
+
 			// 만약 사용자로부터 페이지를 받아왔다면
 			if (request.getParameter("page") != null) {
 				current_page = Integer.parseInt((String)request.getParameter("page"));
 			}
-			
+
 			// jsp에 뿌릴 페이지 태그를 만들어서 보낸다.
 			String pageIndexListAjax = paging.pageIndexListAjax(totalCnt, current_page);
-			
+
 			// SQL 쿼리문에 넣을 조건문
 			int startCount = (current_page - 1) * 10 + 1;
 			int endCount = current_page * 10;
-			
+
 			params.put("startCount", startCount);
 			params.put("endCount", endCount);
-			
+
 			officerList = service.officerList(params);
-			
+
 			model.addAttribute("pageIndexList", pageIndexListAjax);
 			// ======================================================================================================== 페이징 처리
-			
+
 			model.addAttribute("navStfNm", params.get("navStfNm"));
 			model.addAttribute("officerList", officerList);
 			model.addAttribute("officerListCount", officerListCount);
 			model.addAttribute("selectDpt_Div_Tb", selectDpt_Div_Tb);                //조직도 부서명 리스트 뽑기
 			model.addAttribute("selectOrganization", selectOrganization);            // 부서,직금,이름 뽑아오기
-			
+
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 
 		logger.info("---------------end organization [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
-		
+
 		return null;
 	}
 
-	
+
 	// 관리 - 구성원 관리 - 검색 - 사원 목록 Ajax
 	@ResponseBody
 	@RequestMapping(value = "/organizationAjax", method = { RequestMethod.GET, RequestMethod.POST})
 	public Map<String, Object> organizationAjax(@RequestBody Map<String, Object> params, HttpServletRequest request) throws Exception {
 
 		logger.info("-------------start organizationAjax [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
-		
+
 		Map<String, Object> result = new HashMap<String, Object>();
 		List officerList = new ArrayList<HashMap<String, Object>>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		int officerListCount = 0;
-		
-		
+
+
 		try {
-			
+
 			officerListCount = service.officerListCount(params);
-						
+
 			// 페이징 처리 ========================================================================================================
 			Paging paging = new Paging();
-			
+
 			// 총 게시물 수 
 			int totalCnt = officerListCount;
-			
+
 			// 현재 페이지 초기화
 			int current_page = 1;
 			int before_page = 1;
-			
+
 			// 만약 사용자로부터 페이지를 받아왔다면
 			if (params.get("page") != null) {
 				current_page = Integer.parseInt((String)params.get("page"));
 			}
-			
+
 			// jsp에 뿌릴 페이지 태그를 만들어서 보낸다.
 			String pageIndexListAjax = paging.pageIndexListAjax(totalCnt, current_page);
-			
+
 			// SQL 쿼리문에 넣을 조건문
-			
-			
+
+
 			int startCount = (current_page - 1) * 10 + 1;
 			int endCount = current_page * 10;
-			
+
 			params.put("startCount", startCount);
 			params.put("endCount", endCount);
-			
+
 			officerList = service.officerList(params);
-			
+
 			map.put("pageIndexListAjax", pageIndexListAjax);
 			// ======================================================================================================== 페이징 처리
-			
-			
-			
+
+
+
 			map.put("officerList", officerList);
 			map.put("officerListCount", officerListCount);
-			
+
 			result.putAll(map);
-			
-			
+
+
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

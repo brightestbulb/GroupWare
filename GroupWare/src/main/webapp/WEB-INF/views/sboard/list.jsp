@@ -231,7 +231,7 @@
 	if (result == 'SUCCESS') {
 		alert("처리가 완료되었습니다.");
 	} else if (result == "test") {
-		alert("test");
+		alert("관리자만 접근할 수 있습니다.");
 	}
 </script>
 
