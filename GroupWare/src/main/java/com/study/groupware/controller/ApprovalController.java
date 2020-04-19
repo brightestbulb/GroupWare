@@ -48,20 +48,13 @@ public class ApprovalController {
 	public String listAll(@RequestParam int div_apv_sq,HttpSession session,HttpServletRequest request, Model model) throws Exception {
 
 		logger.info("-------------start approvalList [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
-		/*** 로그인 ***/
-		// 세션이 있는지 확인한다, 만약 없다면 새로 생성하지 않는다.
 		session = request.getSession(false);
 
-
 		String stf_sq = null;
-		// 세션을 불러와 admn_id에 넣는다. 없다면 null이나 ""이가 들어오겟죠
 		stf_sq = (String)session.getAttribute("stf_sq");
 
-		// 만약 admn_id가 null 또는 "" 이라면 (로그인을 하지 않은 상태라면) 
-		// 로그인 페이지로 강제로 보내라
 		if (stf_sq == null || stf_sq.equals(""))
 			return "redirect:/login/loginForm";
-		/*** 로그인 ***/
 		logger.info(toString());
 		// 페이징 처리 ========================================================================================================
 		Paging paging = new Paging();
@@ -75,7 +68,6 @@ public class ApprovalController {
 		// 현재 페이지 초기화
 		int current_page = 1;
 
-		// 만약 사용자로부터 페이지를 받아왔다면
 		if (request.getParameter("page") != null) {
 			current_page = Integer.parseInt((String)request.getParameter("page"));
 		}
@@ -88,23 +80,16 @@ public class ApprovalController {
 		// SQL 쿼리문에 넣을 조건문
 		int startCount = (current_page - 1) * 10 + 1;
 		int endCount = current_page * 10;
-		/*	int endCount = totalCnt - ((current_page - 1) * 10);
-		        int startCount = totalCnt - (current_page * 10) + 1;*/
 
 		ApprovalVO avo = new ApprovalVO();
-
 		avo.setDiv_apv_sq(div_apv_sq);
 		avo.setStartCount(startCount);
 		avo.setEndCount(endCount);
 		avo.setStf_sq(stf_sq);
 
-
 		model.addAttribute("approvalList", service.listAll(avo));
-
 		model.addAttribute("pageIndexList", pageIndexList);
 		// ======================================================================================================== 페이징 처리
-
-
 
 		logger.info("---------------end approvalList [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
 		return null;
@@ -121,13 +106,9 @@ public class ApprovalController {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		try {
-
 			session = request.getSession(false);
-
 			String stf_sq = null;
-			// 세션을 불러와 admn_id에 넣는다. 없다면 null이나 ""이가 들어오겟죠
 			stf_sq = (String)session.getAttribute("stf_sq");
-
 			params.setStf_sq(stf_sq);
 			// 페이징 처리 ========================================================================================================
 			Paging paging = new Paging();
@@ -143,7 +124,6 @@ public class ApprovalController {
 			if (params.getPage() != null) {
 				current_page = Integer.parseInt(params.getPage());
 			}
-			/*		String apv_div = "div_apv_sq="+div_apv_sq;*/
 			// jsp에 뿌릴 페이지 태그를 만들어서 보낸다.
 			String pageIndexListAjax = paging.pageIndexListAjax(totalCnt, current_page);
 
@@ -158,20 +138,14 @@ public class ApprovalController {
 			apvList = service.listAll(params);
 			map.put("pageIndexListAjax", pageIndexListAjax);
 			map.put("apvList", apvList);
-
 			result.putAll(map);
-
 			// ======================================================================================================== 페이징 처리
-
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-
 		logger.info("---------------end approvalListSearch [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
-
 		return result;
 	}
-
 
 	@ResponseBody
 	@RequestMapping(value = "/approvalRead", method = {RequestMethod.POST})
@@ -181,7 +155,6 @@ public class ApprovalController {
 		session = request.getSession(false);
 
 		String stf_sq = null;
-		// 세션을 불러와 admn_id에 넣는다. 없다면 null이나 ""이가 들어오겟죠
 		stf_sq = (String)session.getAttribute("stf_sq");
 		ApprovalVO vo = new ApprovalVO();
 		int admn_sq = service.stfAdmn(stf_sq);
@@ -197,7 +170,6 @@ public class ApprovalController {
 
 		logger.info("-------------start removeApproval [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
 		service.remove(apv_sq);
-
 
 		rttr.addFlashAttribute("msg", "SUCCESS");
 		logger.info("---------------end removeApproval [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
@@ -221,7 +193,6 @@ public class ApprovalController {
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
 	public void registGET(Model model) throws Exception {
 		logger.info("-------------start registerGET [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
-
 		logger.info("regist get ...........");
 		logger.info("---------------end registerGET [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
 	}
@@ -229,7 +200,6 @@ public class ApprovalController {
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String registPOST(ApprovalVO approval, RedirectAttributes rttr,MultipartFile file,HttpSession session,HttpServletRequest request) throws Exception {
 		logger.info("-------------start registPOST [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
-
 		logger.info("regist post ...........");
 		logger.info("originalName : " + file.getOriginalFilename());	// 파일명.확장자
 		logger.info("size : " + file.getSize());						// 파일 용량(byte)
@@ -239,22 +209,17 @@ public class ApprovalController {
 		try{
 			FileUpload fileupload = new FileUpload();
 
-			System.out.println(approval.toString());
-
 			String savedName = fileupload.uploadfile(file.getOriginalFilename(), file.getBytes(), uploadPath2);
-
-			System.out.println(savedName+"==================================");
-
 			approval.setApv_pl_rt(savedName);
 			approval.setApv_pl_nm(file.getOriginalFilename());
 		
-		session = request.getSession(false);
-		String stf_sq = null;
-		stf_sq = (String)session.getAttribute("stf_sq");
-		approval.setStf_sq(stf_sq);
-		service.regist(approval);
+			session = request.getSession(false);
+			String stf_sq = null;
+			stf_sq = (String)session.getAttribute("stf_sq");
+			approval.setStf_sq(stf_sq);
+			service.regist(approval);
 
-		rttr.addFlashAttribute("msg", "SUCCESS");
+			rttr.addFlashAttribute("msg", "SUCCESS");
 		}catch(Exception e){
 			e.printStackTrace();
 		}

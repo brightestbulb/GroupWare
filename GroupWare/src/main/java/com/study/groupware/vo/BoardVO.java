@@ -108,6 +108,4 @@ public class BoardVO {
 				+ ", ntc_div_nm=" + ntc_div_nm + ", startCount=" + startCount + ", endCount=" + endCount + ", cate="
 				+ cate + ", keyword=" + keyword + ", page=" + page + "]";
 	}
-	
-	
 }

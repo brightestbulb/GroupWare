@@ -176,8 +176,4 @@ public class ApprovalVO {
 				+ ", startCount=" + startCount + ", endCount=" + endCount + ", cate=" + cate + ", keyword=" + keyword
 				+ ", page=" + page + "]";
 	}
-	
-	
-	
-	
 }

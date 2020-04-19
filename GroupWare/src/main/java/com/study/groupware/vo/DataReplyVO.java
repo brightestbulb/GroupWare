@@ -61,10 +61,4 @@ public class DataReplyVO {
 				+ data_sq + ", dt_rpy_cnt=" + dt_rpy_cnt + ", dt_rpy_dt=" + dt_rpy_dt + ", dt_rpy_mod=" + dt_rpy_mod
 				+ "]";
 	}
-	
-	
-
-	
-	
-	
 }

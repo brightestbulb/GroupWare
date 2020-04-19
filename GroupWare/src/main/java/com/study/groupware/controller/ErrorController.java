@@ -17,17 +17,11 @@ public class ErrorController {
 
 	@RequestMapping(value = "/404", method = { RequestMethod.GET, RequestMethod.POST})
 	public void error404(HttpServletRequest request) throws Exception {
-
 		logger.info("-------------start 404 [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
-		
 		try {
-			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-
 		logger.info("---------------end 404 [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
 	}
-	
-	
 }

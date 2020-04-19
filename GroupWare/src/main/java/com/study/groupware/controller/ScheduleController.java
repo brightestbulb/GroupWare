@@ -50,18 +50,14 @@ public class ScheduleController {
 	@RequestMapping(value = "/selectSchedule", method = { RequestMethod.GET, RequestMethod.POST})
 	public List<ScheduleVO> selectSchedule(@RequestBody Map<String, Object> params, Model model) throws Exception {
 		logger.info("-------------start selectSchedule [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
-		
+
 		List<ScheduleVO> result = null;
-		
 		// 로그인했을 때 부서번호, 사원번호
 		params.put("dpt_sq", "2");
 		params.put("stf_sq", "2");
 		
 		try {
-			
-			// 회사일정에 등록된 모든 스케쥴을 DB에서 조회한다.
 			result = service.selectSchedule(params);
-			
 			// 날짜 뒤에 .0 없애기
 			for (int i=0; i<result.size(); i++) {
 				String tempStr = result.get(i).getBs_scd_str_dt();
@@ -71,13 +67,11 @@ public class ScheduleController {
 				result.get(i).setBs_scd_str_dt(tempStr);
 				result.get(i).setBs_scd_end_dt(tempEnd);
 			}
-
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 
 		logger.info("---------------end selectSchedule [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
-		
 		return result;
 	}
 
@@ -90,17 +84,12 @@ public class ScheduleController {
 		
 		vo.setStf_sq(stf_sq);
 		vo.setBs_scd_cnt(vo.getBs_scd_cnt().replaceAll("\n", "<br>"));
-		
-		System.out.println(vo.toString());
-		
 		try {
 			service.insertSchedule(vo);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-
 		logger.info("---------------end insertSchedule [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
-		
 		return "redirect:/schedule/scheduleList?scd_sq=" + vo.getScd_sq();
 	}
 	
@@ -108,16 +97,12 @@ public class ScheduleController {
 	@RequestMapping(value = "/readSchedule", method = { RequestMethod.GET, RequestMethod.POST})
 	public ScheduleVO readSchedule(@RequestBody Map<String, Object> params) throws Exception {
 		logger.info("-------------start readSchedule [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
-		
+
 		ScheduleVO result = null;
-	
 		try {
 			result = service.readSchedule(params);
-			
-			System.out.println(result.getBs_scd_cnt());
 			result.setBs_scd_cnt(result.getBs_scd_cnt().replaceAll("<br>", "\n"));
-			System.out.println(result.getBs_scd_cnt());
-			
+
 			// 날짜 뒤에 .0 없애기		
 			String tempStr = result.getBs_scd_str_dt();
 			String tempEnd = result.getBs_scd_end_dt();
@@ -141,23 +126,13 @@ public class ScheduleController {
 		logger.info("-------------start updateSchedule [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
 		
 		int result = 0;
-	
-		System.out.println(params);
-		
-		System.out.println(params.get("bs_scd_cnt"));
 		params.put("bs_scd_cnt", params.get("bs_scd_cnt").replaceAll("\n", "<br>"));
-		System.out.println(params.get("bs_scd_cnt"));
-		
 		try {
 			result = service.updateSchedule(params);
-			
-			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-
 		logger.info("---------------end updateSchedule [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
-		
 		return result;
 	}
 	
@@ -167,17 +142,13 @@ public class ScheduleController {
 		logger.info("-------------start deleteSchedule [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
 		
 		int result = 0;
-	
 		try {
 			result = service.deleteSchedule(params);
 			System.out.println("==============================================================================result : " + result);
-			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-
 		logger.info("---------------end deleteSchedule [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
-		
 		return result;
 	}
 }

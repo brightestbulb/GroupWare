@@ -148,6 +148,4 @@ public class OfficerVO {
 				+ stf_ent + ", stf_reg=" + stf_reg + ", stf_mod=" + stf_mod + ", stf_pt_rt=" + stf_pt_rt
 				+ ", stf_pt_nm=" + stf_pt_nm + ", stf_sq_old=" + stf_sq_old + "]";
 	}
-	
-	
 }

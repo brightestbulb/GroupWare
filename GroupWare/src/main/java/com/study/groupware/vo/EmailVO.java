@@ -152,5 +152,4 @@ public class EmailVO {
 				+ ", startCount=" + startCount + ", endCount=" + endCount + ", cate=" + cate + ", page=" + page
 				+ ", keyword=" + keyword + "]";
 	}
-	
 }

@@ -29,13 +29,11 @@ public class DataReplyController {
 	@Inject
 	private DataReplyService service;
 
-
 	@RequestMapping(value="/register", method = RequestMethod.POST)
 	public DataReplyVO register(@RequestBody Map<String, Object> param,HttpServletRequest request,HttpSession session) throws Exception{
 		logger.info("-------------start register [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
 		session = request.getSession(false);
 		String stf_sq = null;
-		// 세션을 불러와 admn_id에 넣는다. 없다면 null이나 ""이가 들어오겟죠
 		stf_sq = (String)session.getAttribute("stf_sq");
 		param.put("stf_sq", stf_sq);
 		DataReplyVO vo = service.addReply(param);
@@ -48,7 +46,6 @@ public class DataReplyController {
 		logger.info("-------------start delete [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
 		service.removeReply(param);
 		logger.info("---------------end delete [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
-
 	}
 
 	@ResponseBody
@@ -60,20 +57,14 @@ public class DataReplyController {
 		entity = new ResponseEntity<String>("SUCCESS",HttpStatus.OK);
 		logger.info("---------------end replyUpdate [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
 		return entity;
-
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/replyMod", method = RequestMethod.POST)
 	public DataReplyVO ReplyRead(@RequestBody Map<String, Object> param) throws Exception {
-
 		logger.info("-------------start ReplyRead [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
 		DataReplyVO vo = service.read(param);
 		logger.info("---------------end ReplyRead [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
 		return vo;
 	}
-
-
-
-
 }

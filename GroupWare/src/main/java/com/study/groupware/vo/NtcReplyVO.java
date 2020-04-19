@@ -60,12 +60,4 @@ public class NtcReplyVO {
 		return "NtcReplyVO [rpy_sq=" + rpy_sq + ", ntc_sq=" + ntc_sq + ", stf_sq=" + stf_sq + ", stf_nm=" + stf_nm
 				+ ", rpy_cnt=" + rpy_cnt + ", rpy_dt=" + rpy_dt + ", rpy_mod=" + rpy_mod + "]";
 	}
-	
-	
-
-	
-	
-	
-	
-
 }

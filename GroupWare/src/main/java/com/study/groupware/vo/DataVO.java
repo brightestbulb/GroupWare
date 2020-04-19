@@ -115,12 +115,4 @@ public class DataVO {
 				+ data_mod + ", data_crs=" + data_crs + ", data_pl_nm=" + data_pl_nm + ", startCount=" + startCount
 				+ ", endCount=" + endCount + ", cate=" + cate + ", keyword=" + keyword + ", page=" + page + "]";
 	}
-	
-	
-	
-	
-	
-	
-	
-
 }

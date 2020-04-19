@@ -37,23 +37,17 @@ public class NavController {
 	public int stfPwUpdate(HttpServletRequest request,HttpSession session, @RequestBody Map<String, Object> params, Model model) throws Exception {
 
 		logger.info("-------------start stfPwUpdate [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
-
 		session = request.getSession(false);
 		String stf_sq = null;
 		stf_sq = (String)session.getAttribute("stf_sq");
-		
 		params.put("stf_sq", stf_sq);
-						
 		int result = 0;
-		
 		try {
 			result = service.stfPwUpdate(params);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		
 		logger.info("---------------end stfPwUpdate [Connect IP : " + InetAddress.getLocalHost().getHostAddress() + "]");
-		
 		return result;
 	}	
 }

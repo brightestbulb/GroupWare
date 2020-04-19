@@ -90,5 +90,4 @@ public class ScheduleVO {
 				+ ", stf_sq=" + stf_sq + ", stf_nm=" + stf_nm + ", bs_scd_nm=" + bs_scd_nm + ", bs_scd_cnt="
 				+ bs_scd_cnt + ", bs_scd_str_dt=" + bs_scd_str_dt + ", bs_scd_end_dt=" + bs_scd_end_dt + "]";
 	}
-	
 }

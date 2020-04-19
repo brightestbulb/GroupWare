@@ -28,6 +28,4 @@ public class LoginVO {
 	public String toString() {
 		return "LoginVO [stf_sq=" + stf_sq + ", stf_pw=" + stf_pw + ", cnt=" + cnt + "]";
 	}
-
-	
 }
