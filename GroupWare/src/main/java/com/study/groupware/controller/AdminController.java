@@ -46,7 +46,6 @@ public class AdminController {
 	@Resource(name = "uploadPath")
 	private String uploadPath;
 
-	// 관리자 페이지와 일반페이지를 나누려고 했으나 나눌 필요는 없는 것 같다.
 	@RequestMapping(value = "/index", method = { RequestMethod.GET, RequestMethod.POST})
 	public void index(HttpServletRequest request) throws Exception {
 
